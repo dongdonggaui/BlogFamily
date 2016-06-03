@@ -1,0 +1,44 @@
+PODS:
+  - BiblioArchiver (0.0.3):
+    - Fuzi (~> 0.3.1)
+  - ChameleonFramework/Default (2.1.0)
+  - ChameleonFramework/Swift (2.1.0):
+    - ChameleonFramework/Default
+  - CoreStore (1.6.7):
+    - GCDKit (= 1.2.5)
+  - Fuzi (0.3.1)
+  - GCDKit (1.2.5)
+  - JLToast (1.4.1)
+  - LeeGo (0.5.2)
+  - R.swift (2.2.2):
+    - R.swift.Library (~> 2.1.0)
+  - R.swift.Library (2.1.0)
+  - SwiftFilePath (0.0.6)
+  - Whisper (3.0.0)
+
+DEPENDENCIES:
+  - BiblioArchiver
+  - ChameleonFramework/Swift
+  - CoreStore (~> 1.6.5)
+  - JLToast (~> 1.4)
+  - LeeGo (~> 0.5.1)
+  - R.swift (~> 2.2.2)
+  - SwiftFilePath
+  - Whisper
+
+SPEC CHECKSUMS:
+  BiblioArchiver: 34ed7ccb46adb79805913d889de9e0e54ea153a0
+  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  CoreStore: 8d85cd01e533e02fb2c8cb2b5f2d9082e94421f8
+  Fuzi: 25118b725a1637f1676f63ae1acbba1f30a5dd6c
+  GCDKit: ed6646fcf761ff139162aaac518b9ec1fb7aa720
+  JLToast: f2ccfdb8726e562e6c0154fa3658cd432021b1cc
+  LeeGo: a00c03c051dd49a35f7cedac9fa8b0a6e01875b7
+  R.swift: ed40b24d65ad70c6cf48a2f249a26a3e5a4a7bc0
+  R.swift.Library: e5e077ed04f6867a95676af491650091b23518e9
+  SwiftFilePath: 52c1db61018e0a3941191eb71002cb5cbdaa39e7
+  Whisper: 42a3ee7c2936f861b23d41bd6cd7dfd22f102405
+
+PODFILE CHECKSUM: b1bf2e2768d3479cee11ec31eb2835dfbfbf0c9d
+
+COCOAPODS: 1.0.0
