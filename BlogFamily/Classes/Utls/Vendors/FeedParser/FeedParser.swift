@@ -70,6 +70,8 @@ class FeedParser: NSObject, NSXMLParserDelegate {
     var currentElementContent: String!
     var currentFeedChannel: FeedChannel!
     var currentFeedItem: FeedItem!
+    var currentAuthor: String?
+    
     
     init(feedURL: String) {
         self.feedURL = feedURL
@@ -151,7 +153,7 @@ class FeedParser: NSObject, NSXMLParserDelegate {
             self.currentElementContent = ""
             
             // Determine the type of feed.
-            if elementName == FeedType.Atom.rawValue { self.feedType = .Atom; return }
+            if elementName == FeedType.Atom.rawValue { self.feedType = .Atom;}
             if elementName == FeedType.RSS1.rawValue || elementName == FeedType.RSS1Alt.rawValue { self.feedType = .RSS1; return }
             if elementName == FeedType.RSS2.rawValue { self.feedType = .RSS2; return }
             
@@ -292,14 +294,24 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         }
         else if self.currentPath == "/feed/entry/content" {
             self.currentFeedItem?.feedContent = self.currentElementContent
+            // fill in cached author if have not set
+            self.currentFeedItem?.feedAuthor = self.currentFeedItem?.feedAuthor ?? self.currentAuthor
+        }
+            
+        // summary
+        else if self.currentPath == "/feed/entry/summary" {
+            self.currentFeedItem?.feedContentSnippet = self.currentElementContent
         }
             
         // pub date
         else if self.currentPath == "/feed/updated" {
             self.currentFeedChannel?.channelDateOfLastChange = self.retrieveDateFromDateString(self.currentElementContent, feedType: self.feedType)
         }
-        else if self.currentPath == "/feed/entry/updated" {
+        else if self.currentPath == "/feed/entry/published" {
             self.currentFeedItem?.feedPubDate = self.retrieveDateFromDateString(self.currentElementContent, feedType: self.feedType)
+        }
+        else if self.currentPath == "/feed/entry/updated" {
+            self.currentFeedItem?.feedUpdateDate = self.retrieveDateFromDateString(self.currentElementContent, feedType: self.feedType)
         }
             
         // category
@@ -310,6 +322,11 @@ class FeedParser: NSObject, NSXMLParserDelegate {
             if let category = self.currentElementAttributes?["term"] as? String {
                 self.currentFeedItem?.feedCategories.append(category)
             }
+        }
+            
+        // author (if not appear in entry)
+        else if self.currentPath == "/feed/author/name" {
+            self.currentAuthor = self.currentElementContent
         }
             
         // author (feed items only)

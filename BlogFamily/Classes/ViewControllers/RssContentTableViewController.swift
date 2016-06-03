@@ -15,6 +15,8 @@ class RssContentTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tableView.rowHeight = 60
 
         if let articles = feed?.articles {
             var tmpArr = [Article]()
@@ -40,9 +42,10 @@ class RssContentTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
 
         let article = self.articles[indexPath.row]
-        cell.textLabel?.text = article.title
-        cell.detailTextLabel?.text = article.summary
-        cell.imageView?.image = Resourse.icFeedImage()
+        (cell.contentView.viewWithTag(2) as! UILabel).text = article.title
+        (cell.contentView.viewWithTag(3) as! UILabel).text = article.publicDate?.lkq_standardDisplayDate()
+        (cell.contentView.viewWithTag(4) as! UILabel).text = article.summary
+        (cell.contentView.viewWithTag(1) as! UIImageView).image = Resourse.icFeedImage()
 
         return cell
     }

@@ -13,6 +13,9 @@
 		090B12A41CF5B60F003AFAA0 /* DownloadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090B12A31CF5B60F003AFAA0 /* DownloadListViewController.swift */; };
 		090B12A61CF5B61A003AFAA0 /* DownloadListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090B12A51CF5B61A003AFAA0 /* DownloadListTableViewController.swift */; };
 		090B12A81CF5BEF8003AFAA0 /* FileManagerAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090B12A71CF5BEF8003AFAA0 /* FileManagerAdaptor.swift */; };
+		0924CD8B1D014EFC009F241D /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0924CD891D014EFC009F241D /* Tag+CoreDataProperties.swift */; };
+		0924CD8C1D014EFC009F241D /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0924CD8A1D014EFC009F241D /* Tag.swift */; };
+		0924CD8E1D019562009F241D /* String+LKQAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0924CD8D1D019562009F241D /* String+LKQAdd.swift */; };
 		093A624B1CEC359000AA747C /* NSDate+LKQAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093A624A1CEC359000AA747C /* NSDate+LKQAdd.swift */; };
 		093A624E1CEC456D00AA747C /* BrickStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093A624D1CEC456D00AA747C /* BrickStore.swift */; };
 		093A62511CEC5CC000AA747C /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093A62501CEC5CC000AA747C /* R.generated.swift */; };
@@ -86,6 +89,9 @@
 		090B12A31CF5B60F003AFAA0 /* DownloadListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadListViewController.swift; sourceTree = "<group>"; };
 		090B12A51CF5B61A003AFAA0 /* DownloadListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadListTableViewController.swift; sourceTree = "<group>"; };
 		090B12A71CF5BEF8003AFAA0 /* FileManagerAdaptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManagerAdaptor.swift; sourceTree = "<group>"; };
+		0924CD891D014EFC009F241D /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0924CD8A1D014EFC009F241D /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		0924CD8D1D019562009F241D /* String+LKQAdd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LKQAdd.swift"; sourceTree = "<group>"; };
 		093A624A1CEC359000AA747C /* NSDate+LKQAdd.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+LKQAdd.swift"; sourceTree = "<group>"; };
 		093A624D1CEC456D00AA747C /* BrickStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickStore.swift; sourceTree = "<group>"; };
 		093A62501CEC5CC000AA747C /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
@@ -199,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				093A624A1CEC359000AA747C /* NSDate+LKQAdd.swift */,
+				0924CD8D1D019562009F241D /* String+LKQAdd.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -299,6 +306,8 @@
 		09626D611CEAE61300793398 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0924CD891D014EFC009F241D /* Tag+CoreDataProperties.swift */,
+				0924CD8A1D014EFC009F241D /* Tag.swift */,
 				09E97CBA1CFFF8CF006DD858 /* Feed+CoreDataProperties.swift */,
 				09E97CBB1CFFF8CF006DD858 /* Feed.swift */,
 				09E97CBC1CFFF8CF006DD858 /* Article+CoreDataProperties.swift */,
@@ -699,6 +708,7 @@
 				090B12A61CF5B61A003AFAA0 /* DownloadListTableViewController.swift in Sources */,
 				09626D601CEAE5D000793398 /* ViewController.swift in Sources */,
 				09EE52761CF7EBEB005139ED /* FeedItem.swift in Sources */,
+				0924CD8B1D014EFC009F241D /* Tag+CoreDataProperties.swift in Sources */,
 				09E97CBF1CFFF8CF006DD858 /* Feed.swift in Sources */,
 				0965551B1CF6F74F00D0A120 /* ThreadHelper.swift in Sources */,
 				09626D701CEAFC6900793398 /* ModelManager.swift in Sources */,
@@ -706,12 +716,14 @@
 				09E97CBE1CFFF8CF006DD858 /* Feed+CoreDataProperties.swift in Sources */,
 				0950049E1CF5809F005B1A58 /* ArticleListTableViewController.swift in Sources */,
 				09EE527C1CF7ED0C005139ED /* NSDate+FeedsDate.swift in Sources */,
+				0924CD8C1D014EFC009F241D /* Tag.swift in Sources */,
 				09626D681CEAE70E00793398 /* Blog.swift in Sources */,
 				09626D751CEB1A6700793398 /* IndicatorAdaptor.swift in Sources */,
 				09E97CC11CFFF8CF006DD858 /* Article.swift in Sources */,
 				09626D6E1CEAF04500793398 /* AddBlogViewController.swift in Sources */,
 				093A624E1CEC456D00AA747C /* BrickStore.swift in Sources */,
 				09EE527D1CF7ED0C005139ED /* String+RemoveHTMLCharacters.swift in Sources */,
+				0924CD8E1D019562009F241D /* String+LKQAdd.swift in Sources */,
 				09626D641CEAE64B00793398 /* Model.xcdatamodeld in Sources */,
 				095004A01CF580B8005B1A58 /* ArticleListViewController.swift in Sources */,
 				09626D6A1CEAE78300793398 /* BlogListViewController.swift in Sources */,

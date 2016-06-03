@@ -21,6 +21,20 @@ extension NSDate {
             return
         }
         
+        struct Static {
+            static var onceToken: dispatch_once_t = 0
+            static var dateFormatter: NSDateFormatter? = nil
+        }
+        
+        dispatch_once(&Static.onceToken) {
+            let formatter = NSDateFormatter()
+            formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            formatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+            Static.dateFormatter = formatter
+        }
+        let formatter = Static.dateFormatter!
+        
         let string = swiftString as NSString
         
         switch format {
@@ -32,15 +46,20 @@ extension NSDate {
                 } else if string.hasSuffix("+00:00") {
                     s = s.substringToIndex(s.length-6) + "GMT"
                 } else if string.hasSuffix("Z") {
+                    do {
+                        let regex = try NSRegularExpression(pattern: "\\.[0-9]*", options: .CaseInsensitive)
+                        let range = regex.rangeOfFirstMatchInString(s as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, s.length))
+                        let subString = s.substringWithRange(range)
+                        s = s.stringByReplacingOccurrencesOfString(subString, withString: "")
+                    } catch { error
+                        print("error : \(error)")
+                    }
                     s = s.substringToIndex(s.length-1) + "GMT"
                 } else if string.hasSuffix("+0000") {
                     s = s.substringToIndex(s.length-5) + "GMT"
                 }
 
-                let formatter = NSDateFormatter()
-                formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
-                if let date = formatter.dateFromString(string as String) {
+                if let date = formatter.dateFromString(s as String) {
                     self.init(timeInterval:0, sinceDate:date)
                 } else {
                     self.init()

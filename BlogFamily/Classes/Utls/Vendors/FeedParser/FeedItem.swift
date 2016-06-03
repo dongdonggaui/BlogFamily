@@ -27,6 +27,7 @@ class FeedItem: NSObject {
     // MARK: - optional
     var feedContentSnippet: String?
     var feedPubDate: NSDate?
+    var feedUpdateDate: NSDate?
     var feedAuthor: String?
     var feedCategories: [String] = []
     var feedCommentsURL: String?

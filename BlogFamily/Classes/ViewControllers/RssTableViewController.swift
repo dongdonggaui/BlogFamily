@@ -47,6 +47,28 @@ class RssTableViewController: UITableViewController, ListSectionObserver {
         self.performSegueWithIdentifier("showFeed", sender: Feed)
     }
     
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        switch editingStyle {
+        case .Delete:
+            let alert = UIAlertController(title: "确定删除", message: "删除后不可撤销", preferredStyle: .ActionSheet)
+            alert.addAction(UIAlertAction(title: "删除", style: .Destructive, handler: { action in
+                ModelManager.dataStack.beginAsynchronous({ (transaction) in
+                    let feed = ModelManager.feeds[indexPath]
+                    transaction.delete(feed)
+                    transaction.commit()
+                })
+            }))
+            alert.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        default:
+            print("unsupported editing style : \(editingStyle)")
+        }
+    }
+    
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showFeed", let vc = segue.destinationViewController as? RssContentTableViewController {

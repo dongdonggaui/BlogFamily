@@ -89,8 +89,9 @@ extension WebarchiveManager {
 }
 
 extension WebarchiveManager {
-    private func addArchiveTask(withUrl url: NSURL, completionHandler: WebarchiveCompletionHandler) {
+    private func addArchiveTask(withUrl url: NSURL, fileName: String? = nil, completionHandler: WebarchiveCompletionHandler) {
         dispatch_async(downloadQueue) {
+            print("begin download task : \(url.absoluteString)")
 
             self.totalTaskCountIncrement()
             
@@ -99,8 +100,9 @@ extension WebarchiveManager {
             let semaphore = dispatch_semaphore_create(0)
             
             Archiver.archiveWebpageFormUrl(url) { (webarchiveData, metaData, error) in
+                print("end download task : \(url.absoluteString), with error : \(error)")
                 
-                let fileName = FileManagerAdaptor.generateWebarchiveName()
+                let fileName = fileName ?? FileManagerAdaptor.generateWebarchiveName()
                 
                 let completed: (success: Bool, error: NSError?) -> () = { success, error in
                     
@@ -156,7 +158,7 @@ extension WebarchiveManager {
         }
     }
     
-    func archive(url url: NSURL, feed: Feed? = nil, finished: WebarchiveFinished) {
+    func archive(url url: NSURL, fileName: String? = nil, finished: WebarchiveFinished) {
         
         if url.absoluteString.hasPrefix("file://") {
             IndicatorAdaptor.toast(message: "已经下载过啦")
@@ -167,18 +169,25 @@ extension WebarchiveManager {
             finished(success: false, errorReason: "该任务正在下载中，请勿重复添加")
             return
         }
+        
+        // check if needed to download webpage
         var exist = false
+        var article: Article? = nil
         ModelManager.dataStack.beginSynchronous { (transaction) in
-            let article = transaction.fetchOne(From(Article), Where("url", isEqualTo: url.absoluteString))
-            exist = article != nil
+            article = transaction.fetchOne(From(Article), Where("url", isEqualTo: url.absoluteString))
+            exist = article?.archivePath != nil
         }
+        
+        // stop if the webpage already downloaded
         if exist {
             finished(success: false, errorReason: "已经下载过啦")
             return
         }
+        
+        // launch webpage download task
         self.taskEnqueue(withUrl: url)
         dispatch_group_enter(archiveGroup)
-        self.addArchiveTask(withUrl: url) { [weak self] (archivedPath, title, error) in
+        self.addArchiveTask(withUrl: url, fileName: fileName) { [weak self] (archivedPath, title, error) in
             guard let safeSelf = self else {
                 return
             }
@@ -188,17 +197,31 @@ extension WebarchiveManager {
                 return
             }
             
-            ModelManager.dataStack.beginAsynchronous({ (transaction) in
-                let article = transaction.create(Into(Article))
-                article.artileId = FileManagerAdaptor.webarchiveId(withFileName: fileName)
-                article.archivePath = fileName
-                article.url = url.absoluteString
-                article.title = title
-                if feed != nil {
-                    let feed = transaction.edit(feed)
-                    article.feed = feed
+            // download success then save it to db
+            ModelManager.dataStack.beginSynchronous({ (transaction) in
+                if let article = transaction.edit(article) {
+                    // feed article task
+                    print("download feed article : \(article.title)")
+                    article.archivePath = fileName
+                } else {
+                    // web article task
+                    print("download web article : \(title)")
+                    let article = transaction.create(Into(Article))
+                    article.artileId = FileManagerAdaptor.webarchiveId(withFileName: fileName)
+                    article.archivePath = fileName
+                    article.url = url.absoluteString
+                    article.title = title
+                    article.addDate = NSDate()
+                    article.domain = url.host
                 }
-                transaction.commit()
+                
+                let result = transaction.commitAndWait()
+                switch result {
+                case .Success(let hasChanges):
+                    print("commit success with changes : \(hasChanges))")
+                case .Failure(let error):
+                    print("commit failed : \(error)")
+                }
             })
             
             safeSelf.taskDequeue(withUrl: url)
