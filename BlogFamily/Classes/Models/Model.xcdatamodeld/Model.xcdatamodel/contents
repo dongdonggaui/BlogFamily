@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15D21" minimumToolsVersion="Xcode 7.0">
+    <entity name="Article" representedClassName=".Article" syncable="YES">
+        <attribute name="addDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="archivePath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="artileId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="feed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Feed" inverseName="articles" inverseEntity="Feed" syncable="YES"/>
+    </entity>
+    <entity name="Blog" representedClassName=".Blog" syncable="YES">
+        <attribute name="addDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="beginCharacter" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <attribute name="blogId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subtitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Feed" representedClassName=".Feed" syncable="YES">
+        <attribute name="addDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="feedId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="syncDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updateDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="articles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Article" inverseName="feed" inverseEntity="Article" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Article" positionX="-63" positionY="27" width="128" height="195"/>
+        <element name="Blog" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Feed" positionX="-63" positionY="63" width="128" height="150"/>
+    </elements>
+</model>

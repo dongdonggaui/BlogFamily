@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="soH-TZ-i7l">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Download List View Controller-->
+        <scene sceneID="q4L-V4-SfN">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="PGp-hm-wmg" customClass="DownloadListViewController" customModule="BlogFamily" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ojm-b3-hDQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="fQr-f1-4yW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Dey-35-ghw">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FQl-Lm-wqs">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <connections>
+                                    <segue destination="nJ0-X9-e74" kind="embed" id="cSd-JV-fQC"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="FQl-Lm-wqs" secondAttribute="trailing" id="2lf-IO-11F"/>
+                            <constraint firstItem="fQr-f1-4yW" firstAttribute="top" secondItem="FQl-Lm-wqs" secondAttribute="bottom" id="FfE-ng-Bvy"/>
+                            <constraint firstItem="FQl-Lm-wqs" firstAttribute="top" secondItem="ojm-b3-hDQ" secondAttribute="bottom" id="dtm-Ex-bv6"/>
+                            <constraint firstItem="FQl-Lm-wqs" firstAttribute="leading" secondItem="Dey-35-ghw" secondAttribute="leading" id="eW2-LG-LDh"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="lrJ-ZS-CHI"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lIW-jk-3yY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1209" y="415"/>
+        </scene>
+        <!--Download List Table View Controller-->
+        <scene sceneID="ZCe-qd-fXl">
+            <objects>
+                <tableViewController id="nJ0-X9-e74" customClass="DownloadListTableViewController" customModule="BlogFamily" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Uet-Sw-dwd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="0yX-JH-zNS" detailTextLabel="y9n-so-qF3" style="IBUITableViewCellStyleSubtitle" id="9wu-fi-OFO">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9wu-fi-OFO" id="ymF-SR-Okl">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0yX-JH-zNS">
+                                            <rect key="frame" x="15" y="5" width="32" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="y9n-so-qF3">
+                                            <rect key="frame" x="15" y="25" width="41" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="nJ0-X9-e74" id="l6L-94-P1s"/>
+                            <outlet property="delegate" destination="nJ0-X9-e74" id="itQ-oG-0Ox"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PgC-xQ-HaH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1851" y="415"/>
+        </scene>
+        <!--下载-->
+        <scene sceneID="8iX-hF-5Cb">
+            <objects>
+                <navigationController title="下载" automaticallyAdjustsScrollViewInsets="NO" id="soH-TZ-i7l" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9Ep-20-gGx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="PGp-hm-wmg" kind="relationship" relationship="rootViewController" id="dgu-v4-6EL"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jSi-Sr-eM4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="397" y="415"/>
+        </scene>
+    </scenes>
+</document>
