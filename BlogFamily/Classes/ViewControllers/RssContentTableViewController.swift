@@ -24,6 +24,9 @@ class RssContentTableViewController: UITableViewController {
                 let article = article as! Article
                 tmpArr += [article]
             })
+            tmpArr = (tmpArr as NSArray).sortedArrayUsingComparator({ (obj1, obj2) -> NSComparisonResult in
+                return ((obj2 as! Article).publicDate!.compare((obj1 as! Article).publicDate!))
+            }) as! [Article]
             self.articles += tmpArr
         }
     }

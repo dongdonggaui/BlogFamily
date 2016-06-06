@@ -145,16 +145,6 @@
             </objects>
             <point key="canvasLocation" x="-153.5" y="1389"/>
         </scene>
-        <!--Download-->
-        <scene sceneID="SnC-sE-7vR">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Download" id="Noa-HS-pJU" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="下载" id="Slp-q9-w7f"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7xs-8K-wJG" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-144" y="1435"/>
-        </scene>
         <!--Rss-->
         <scene sceneID="FKr-0o-Ncj">
             <objects>
@@ -177,7 +167,6 @@
                     <connections>
                         <segue destination="sxz-ji-wqp" kind="relationship" relationship="viewControllers" id="zVV-Gs-mfx"/>
                         <segue destination="3u5-8f-82P" kind="relationship" relationship="viewControllers" id="VPb-I1-N4p"/>
-                        <segue destination="Noa-HS-pJU" kind="relationship" relationship="viewControllers" id="3wE-ha-IP3"/>
                         <segue destination="kg4-AJ-wvY" kind="relationship" relationship="viewControllers" id="PTe-qh-uZ5"/>
                     </connections>
                 </tabBarController>
