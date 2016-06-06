@@ -12,13 +12,8 @@ extension String {
     func lkq_stringByClearHTMLElements() -> String {
         var s = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) as NSString
         do {
-            let regex = try NSRegularExpression(pattern: "<[\\s\\S]*>", options: .CaseInsensitive)
-            let matches = regex.matchesInString(s as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, (s as NSString).length)) as NSArray
-            matches.enumerateObjectsWithOptions(.Reverse, usingBlock: { (result, index, stop) in
-                let result = result as! NSTextCheckingResult
-                let replacement = s.substringWithRange(result.range)
-                s = s.stringByReplacingOccurrencesOfString(replacement, withString: "")
-            })
+            let regex = try NSRegularExpression(pattern: "<[^>]+>", options: .CaseInsensitive)
+            s = regex.stringByReplacingMatchesInString(s as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, s.length), withTemplate: "")
         } catch {
             print("clear html error")
         }

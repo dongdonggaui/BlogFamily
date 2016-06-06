@@ -5,10 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--博客家-->
+        <!--专栏-->
         <scene sceneID="Njz-Qx-8Mi">
             <objects>
-                <tableViewController title="博客家" id="WsM-V7-vSY" customClass="BlogListViewController" customModule="BlogFamily" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="专栏" id="WsM-V7-vSY" customClass="BlogListViewController" customModule="BlogFamily" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="x2P-Jg-Tpg">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,7 +44,7 @@
                             <outlet property="delegate" destination="WsM-V7-vSY" id="Hlu-YL-VWj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="博客家" id="oEt-1W-n6f">
+                    <navigationItem key="navigationItem" title="专栏" id="oEt-1W-n6f">
                         <barButtonItem key="backBarButtonItem" title="返回" id="OqW-mo-J4V"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="fYK-4z-BIW">
                             <connections>
