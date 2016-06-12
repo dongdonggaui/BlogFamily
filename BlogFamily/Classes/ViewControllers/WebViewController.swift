@@ -8,13 +8,26 @@
 
 import UIKit
 import WebKit
+import NJKWebViewProgress
 
-class WebViewController: UIViewController, UIScrollViewDelegate {
+class WebViewController: UIViewController, UIScrollViewDelegate, UIWebViewDelegate, NJKWebViewProgressDelegate {
     
     var url: NSURL? = nil
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var toolView: UIView!
+    
+    lazy var progressView: NJKWebViewProgressView = {
+        let view = NJKWebViewProgressView(frame: CGRect(x: 0, y: 20, width: CGRectGetWidth(self.view.frame), height: 4))
+        return view
+    }()
+    
+    lazy var progressProxy: NJKWebViewProgress = {
+        let proxy = NJKWebViewProgress()
+        proxy.webViewProxyDelegate = self
+        proxy.progressDelegate = self
+        return proxy
+    }()
     
     deinit {
         webView.scrollView.delegate = nil
@@ -77,9 +90,18 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    // MARK: - NJKWebViewProgressDelegate
+    func webViewProgress(webViewProgress: NJKWebViewProgress!, updateProgress progress: Float) {
+        self.progressView.setProgress(progress, animated: false)
+    }
+    
     // MARK: - Actions
     @IBAction func backButtonTapped(sender: UIButton) {
-        self.navigationController?.popViewControllerAnimated(true)
+        if self.webView.canGoBack {
+            self.webView.goBack()
+        } else {
+            self.navigationController?.popViewControllerAnimated(true)
+        }
     }
     
     @IBAction func downloadButtonTapped(sender: UIButton) {
@@ -96,12 +118,15 @@ class WebViewController: UIViewController, UIScrollViewDelegate {
         
         let webView = UIWebView()
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.scalesPageToFit = true
         
         return webView
     }()
     
     private func setupViews() {
         
+        self.view.addSubview(self.progressView)
+        self.webView.delegate = self.progressProxy
         self.contentView.addSubview(self.webView)
         let constrains: [NSLayoutConstraint] = [
             self.webView.topAnchor.constraintEqualToAnchor(self.contentView.topAnchor),

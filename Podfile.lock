@@ -10,6 +10,11 @@ PODS:
   - GCDKit (1.2.5)
   - JLToast (1.4.1)
   - LeeGo (0.5.2)
+  - NJKWebViewProgress (0.2.3):
+    - NJKWebViewProgress/Core (= 0.2.3)
+    - NJKWebViewProgress/ProgressView (= 0.2.3)
+  - NJKWebViewProgress/Core (0.2.3)
+  - NJKWebViewProgress/ProgressView (0.2.3)
   - R.swift (2.2.2):
     - R.swift.Library (~> 2.1.0)
   - R.swift.Library (2.1.0)
@@ -22,6 +27,7 @@ DEPENDENCIES:
   - CoreStore (~> 1.6.5)
   - JLToast (~> 1.4)
   - LeeGo (~> 0.5.1)
+  - NJKWebViewProgress
   - R.swift (~> 2.2.2)
   - SwiftFilePath
   - Whisper
@@ -34,11 +40,12 @@ SPEC CHECKSUMS:
   GCDKit: ed6646fcf761ff139162aaac518b9ec1fb7aa720
   JLToast: f2ccfdb8726e562e6c0154fa3658cd432021b1cc
   LeeGo: a00c03c051dd49a35f7cedac9fa8b0a6e01875b7
+  NJKWebViewProgress: f481fd424cb5ecc27eacae11b5397db92fba9a4d
   R.swift: ed40b24d65ad70c6cf48a2f249a26a3e5a4a7bc0
   R.swift.Library: e5e077ed04f6867a95676af491650091b23518e9
   SwiftFilePath: 52c1db61018e0a3941191eb71002cb5cbdaa39e7
   Whisper: 42a3ee7c2936f861b23d41bd6cd7dfd22f102405
 
-PODFILE CHECKSUM: b1bf2e2768d3479cee11ec31eb2835dfbfbf0c9d
+PODFILE CHECKSUM: 5df6fff84ec2a687a2f7527dc4ee40ee434758b5
 
 COCOAPODS: 1.0.0

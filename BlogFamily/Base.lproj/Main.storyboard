@@ -14,27 +14,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="blogListCell" id="dRY-wf-3k6" customClass="BlogListCell" customModule="BlogFamily" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="blogListCell" rowHeight="50" id="dRY-wf-3k6" customClass="BlogListCell" customModule="BlogFamily" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="600" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dRY-wf-3k6" id="cl4-Dm-dLx">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="viH-vS-WCv">
-                                            <rect key="frame" x="15" y="25" width="31" height="14"/>
+                                            <rect key="frame" x="15" y="29" width="31" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7U-HW-hDg">
-                                            <rect key="frame" x="15" y="5" width="32" height="20"/>
+                                            <rect key="frame" x="15" y="9" width="32" height="20"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RgI-5w-fdu" userLabel="Time">
-                                            <rect key="frame" x="554" y="25" width="31" height="14"/>
+                                            <rect key="frame" x="554" y="29" width="31" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -48,7 +48,7 @@
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="n7U-HW-hDg" secondAttribute="trailing" constant="8" id="iiL-be-BTD"/>
                                         <constraint firstItem="viH-vS-WCv" firstAttribute="leading" secondItem="n7U-HW-hDg" secondAttribute="leading" id="niX-zD-zyc"/>
                                         <constraint firstItem="RgI-5w-fdu" firstAttribute="centerY" secondItem="viH-vS-WCv" secondAttribute="centerY" id="yS4-RR-1Y1"/>
-                                        <constraint firstItem="n7U-HW-hDg" firstAttribute="top" secondItem="cl4-Dm-dLx" secondAttribute="top" constant="5" id="yvA-eG-Efa"/>
+                                        <constraint firstItem="n7U-HW-hDg" firstAttribute="top" secondItem="cl4-Dm-dLx" secondAttribute="top" constant="9" id="yvA-eG-Efa"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>

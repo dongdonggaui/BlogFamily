@@ -19,6 +19,7 @@ class RssTableViewController: UITableViewController, ListSectionObserver {
         super.viewDidLoad()
     
         ModelManager.feeds.addObserver(self)
+        self.tableView.rowHeight = 50
     }
 
     override func didReceiveMemoryWarning() {
