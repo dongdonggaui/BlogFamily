@@ -145,6 +145,7 @@ extension WebarchiveManager {
     }
 }
 
+// MARK: - Extension for indicators
 extension WebarchiveManager {
     
     func archive(url url: NSURL) {
@@ -185,14 +186,12 @@ extension WebarchiveManager {
         
         // launch webpage download task
         self.taskEnqueue(withUrl: url)
-        dispatch_group_enter(archiveGroup)
         self.addArchiveTask(withUrl: url, fileName: fileName) { [weak self] (archivedPath, title, error) in
             guard let safeSelf = self else {
                 return
             }
             guard let fileName = archivedPath else {
                 safeSelf.taskDequeue(withUrl: url)
-                dispatch_group_leave(safeSelf.archiveGroup)
                 return
             }
             
@@ -224,14 +223,12 @@ extension WebarchiveManager {
             })
             
             safeSelf.taskDequeue(withUrl: url)
-            dispatch_group_leave(safeSelf.archiveGroup)
-        }
-        dispatch_group_notify(self.archiveGroup, dispatch_get_main_queue()) {
             finished(success: true, errorReason: nil)
         }
     }
 }
 
+// MARK: - Extension for multi taskes
 extension WebarchiveManager {
     
     func downloadArticles(articles: [Article], progress: ArticleDownloadProgress, completion: ArticleDwonloadCompletionHandler) {
