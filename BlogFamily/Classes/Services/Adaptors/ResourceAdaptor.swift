@@ -19,4 +19,28 @@ public struct Resourse {
     static func icFeedImage() -> UIImage? {
         return R.image.icFeed()
     }
+    
+}
+
+extension Resourse {
+    
+    static func blogListCell() -> String {
+        return R.reuseIdentifier.blogListCell.identifier
+    }
+    
+    static func articleListCell() -> String {
+        return R.reuseIdentifier.articleListCell.identifier
+    }
+    
+    static func rssCell() -> String {
+        return R.reuseIdentifier.rssCell.identifier
+    }
+    
+    static func rssContentCell() -> String {
+        return R.reuseIdentifier.rssContentCell.identifier
+    }
+    
+    static func suggestCell() -> String {
+        return R.reuseIdentifier.suggestCell.identifier
+    }
 }

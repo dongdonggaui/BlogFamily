@@ -20,64 +20,60 @@ class FeedParseManager {
     }
     
     func syncIfNeeded() {
-        guard !self.syncronizing else {
-            return
-        }
-        
-        guard let feeds = ModelManager.dataStack.fetchAll(From(Feed)) else {
-            return
-        }
-        
-        self.updateSyncronizing(true)
-        IndicatorAdaptor.whistleLoading(withMessage: "正在同步")
-        
-        //TODO: retain parse operation
-        
-        for feed in feeds {
-            guard let url = feed.url else {
-                continue
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            guard !self.syncronizing else {
+                return
             }
             
-//            if let syncTime = feed.syncDate where NSDate().timeIntervalSinceDate(syncTime) < 12 * 3600 {
-//                continue
-//            }
-            dispatch_group_async(feedParseGroup, feedParseQueue, {
+            guard let feeds = ModelManager.dataStack.fetchAll(From(Feed)) else {
+                return
+            }
+            
+            self.updateSyncronizing(true)
+            IndicatorAdaptor.whistleLoading(withMessage: "准备同步")
+            print("开始同步")
+            
+            for feed in feeds {
+                IndicatorAdaptor.updateWhistleLoading(withMessage: "正在同步 \(feed.title!)")
+                guard let url = feed.url else {
+                    IndicatorAdaptor.whistleCalm(withMessage: "同步错误 \(feed.title!)地址不合法")
+                    continue
+                }
+                
+//                if let syncTime = feed.syncDate where NSDate().timeIntervalSinceDate(syncTime) < 12 * 3600 {
+//                    IndicatorAdaptor.whistleCalm(withMessage: "同步完成 \(feed.title!)")
+//                    continue
+//                }
+                
+                let parseSemaphore = dispatch_semaphore_create(0)
                 let parseOperation = FeedParseOperation(withUrl: url)
-                let semaphore = dispatch_semaphore_create(0)
+                print("开始解析 feed : \(feed.url)")
                 parseOperation.parse(withHandler: { (channel, items, error) in
                     guard let items = items, let channel = channel else {
-                        dispatch_semaphore_signal(semaphore)
+                        print("解析失败 feed : \(feed.url)")
+                        dispatch_semaphore_signal(parseSemaphore)
                         return
                     }
+                    print("解析完成 feed : \(feed.url)")
                     
-                    // update sync time & update time
-                    ModelManager.dataStack.beginSynchronous({ (transaction) in
-                        let feed = transaction.edit(feed)
-                        feed?.updateDate = channel.channelDateOfLastChange
-                        feed?.syncDate = NSDate()
-                        transaction.commitAndWait()
-                    })
+                    var needDownloadArticles: [Article] = []
                     
+                    // update articles' meta data
+                    print("更新 articles...")
                     for item in items {
                         guard let feedLink = item.feedLink else {
                             continue
                         }
-                        let semaphore = dispatch_semaphore_create(0)
-                        let articleId = FileManagerAdaptor.generateWebarchiveId()
                         ModelManager.dataStack.beginSynchronous({ (transaction) in
-//                            guard transaction.fetchOne(From(Article), Where("url", isEqualTo: feedLink)) == nil else {
-//                                return
-//                            }
-                            
                             let existArticle = transaction.fetchOne(From(Article), Where("url", isEqualTo: feedLink))
                             
                             let article = existArticle ?? transaction.create(Into(Article))
-                            article.artileId = articleId
+                            article.artileId = article.artileId ?? FileManagerAdaptor.generateWebarchiveId()
                             article.title = item.feedTitle
                             article.author = item.feedAuthor
-                            article.summary = item.feedContentSnippet?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                             article.publicDate = item.feedPubDate
                             article.url = feedLink
+                            article.summary = item.feedContent
                             article.feed = transaction.edit(feed)
                             article.addDate = NSDate()
                             article.domain = NSURL(string: feedLink)!.host
@@ -89,29 +85,48 @@ class FeedParseManager {
                             }
                             
                             transaction.commitAndWait()
+                            
+                            if article.archivePath == nil {
+                                needDownloadArticles += [article]
+                            }
                         })
-                        WebarchiveManager.sharedInstance.archive(url: NSURL(string: feedLink)!, fileName: FileManagerAdaptor.fileName(withWebarhiveId: articleId), finished: { (success, errorReason) in
-                            dispatch_semaphore_signal(semaphore)
-                        })
-                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
                     }
-                    dispatch_semaphore_signal(semaphore)
+                    print("articles 更新完成")
+                    print("需要下载 article : \(needDownloadArticles.count)")
+                    
+                    // download articles if needed
+                    if needDownloadArticles.count > 0 {
+                        let downloadSemaphore = dispatch_semaphore_create(0)
+                        print("开始下载: \(feed.title)")
+                        WebarchiveManager.sharedInstance.downloadArticles(needDownloadArticles, progress: { (completedTaskCount, totalTaskCount) in
+                            IndicatorAdaptor.updateWhistleLoading(withMessage: "正在下载 \(feed.title!) \(completedTaskCount)/\(totalTaskCount)")
+                            }, completion: {
+                                print("完成下载: \(feed.title)")
+                                dispatch_semaphore_signal(downloadSemaphore)
+                        })
+                        dispatch_semaphore_wait(downloadSemaphore, DISPATCH_TIME_FOREVER)
+                    }
+                    
+                    // update sync time & update time
+                    ModelManager.dataStack.beginSynchronous({ (transaction) in
+                        let feed = transaction.edit(feed)
+                        feed?.updateDate = channel.channelDateOfLastChange
+                        feed?.syncDate = NSDate()
+                        transaction.commitAndWait()
+                    })
+                    dispatch_semaphore_signal(parseSemaphore)
                 })
-                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
-            })
-        }
+                dispatch_semaphore_wait(parseSemaphore, DISPATCH_TIME_FOREVER)
+            }
             
-        dispatch_group_notify(feedParseGroup, dispatch_get_main_queue(), {
             IndicatorAdaptor.whistleCalm()
             IndicatorAdaptor.toast(message: "同步完成")
             self.updateSyncronizing(false)
-        })
+        }
     }
     
     // MARK: - Private
     private init() {}
-    private let feedParseQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-    private let feedParseGroup = dispatch_group_create()
     private var syncronizing = false
     private let syncStateQueue = dispatch_queue_create("com.bf.syncStateQueue", DISPATCH_QUEUE_SERIAL)
     

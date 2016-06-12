@@ -117,7 +117,18 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         if (feedRawContents != nil) { // already downloaded content?
             feedParser = NSXMLParser(data: feedRawContents!)
         } else { // retrieve content and start parsing.
-            feedParser = NSXMLParser(contentsOfURL: NSURL(string: feedURL)!)
+            let semaphore = dispatch_semaphore_create(0)
+            NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: feedURL)!, completionHandler: { [weak self] (data, response, error) in
+                if let data = data {
+                    self!.feedParser = NSXMLParser(data: data)
+                } else {
+                    self!.feedParser = nil
+                    print("fetch xml failed : \(error)")
+                }
+                dispatch_semaphore_signal(semaphore)
+            }).resume()
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+//            feedParser = NSXMLParser(contentsOfURL: NSURL(string: feedURL)!)
         }
         if (feedParser != nil) { // content successfully retrieved
             self.parsingStatus = .Parsing
@@ -141,6 +152,10 @@ class FeedParser: NSObject, NSXMLParserDelegate {
     }
     
     // MARK: - NSXMLParser methods
+    
+    func parserDidStartDocument(parser: NSXMLParser) {
+        print("parser did start : \(feedURL)")
+    }
     
     // MARK: -- Element start
     
@@ -261,9 +276,9 @@ class FeedParser: NSObject, NSXMLParserDelegate {
             
             // check for max items
             self.feedItemsParsed += 1
-            if (self.feedItemsParsed >= self.maxFeedsToParse) { // parse up to maxFeedsToParse
-                self.successfullyCloseParsingAfterMaxItemsFound()
-            }
+//            if (self.feedItemsParsed >= self.maxFeedsToParse) { // parse up to maxFeedsToParse
+//                self.successfullyCloseParsingAfterMaxItemsFound()
+//            }
         }
             
         // title
@@ -299,8 +314,8 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         }
             
         // summary
-        else if self.currentPath == "/feed/entry/summary" {
-            self.currentFeedItem?.feedContentSnippet = self.currentElementContent
+        else if self.currentPath == "/feed/entry/summary" || self.currentPath == "/feed/entry/description" {
+            self.currentFeedItem?.feedContent = self.currentElementContent
         }
             
         // pub date
@@ -555,6 +570,7 @@ class FeedParser: NSObject, NSXMLParserDelegate {
     }
 
     func parserDidEndDocument(parser: NSXMLParser) {
+        print("xml parser did end document : \(feedURL)")
         self.delegate?.feedParser?(self, successfullyParsedURL: feedURL)
     }
     
@@ -627,6 +643,17 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         let cfEncoding: CFStringEncoding = CFStringConvertIANACharSetNameToEncoding(textEncodingName! as NSString as CFStringRef)
         if cfEncoding != kCFStringEncodingInvalidId { return CFStringConvertEncodingToNSStringEncoding(cfEncoding); }
         else { return nil; }
+    }
+    
+    // MARK: - add
+    func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
+        print("xml parse error : \(parseError)")
+        abortParsingAndReportFailure(parseError.localizedDescription)
+    }
+    
+    func parser(parser: NSXMLParser, validationErrorOccurred validationError: NSError) {
+        print("xml parse validation error : \(validationError)")
+        abortParsingAndReportFailure(validationError.localizedDescription)
     }
     
 }

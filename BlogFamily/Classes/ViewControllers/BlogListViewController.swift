@@ -19,10 +19,7 @@ class BlogListViewController: UITableViewController, ListSectionObserver {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for reuseId in BlogBrick.reuseIdentifiers {
-            self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: reuseId)
-        }
-        
+        self.tableView.rowHeight = 50
         ModelManager.blogs.addObserver(self)
     }
 
@@ -36,40 +33,23 @@ class BlogListViewController: UITableViewController, ListSectionObserver {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         let sections = ModelManager.blogs.numberOfSections()
-        print("sections : \(sections)")
         return sections
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let count = ModelManager.blogs.numberOfObjectsInSection(section)
-        print("row count : \(count)")
         return count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let brick = BlogBrick.blogListCell.brick()
-        let cell = tableView.dequeueReusableCellWithIdentifier(brick.name, forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.blogListCell(), forIndexPath: indexPath) as! BlogListCell
 
         let blog = ModelManager.blogs[indexPath]
-        cell.lg_configureAs(brick, dataSource: blog, updatingStrategy: .Always)
+        cell.configureCellWith(blog.title, subtitle: blog.subtitle, time: blog.addDate?.lkq_standardDisplayDate())
 
         return cell
-    }
-    
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
-    }
-    
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sectionInfo = ModelManager.blogs.sectionInfoAtIndex(safeSectionIndex: section)
-        let name = sectionInfo?.name ?? "unnamed"
-        return name
-    }
-    
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -116,11 +96,12 @@ class BlogListViewController: UITableViewController, ListSectionObserver {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         if segue.identifier == "showAdd",
-            let vc = segue.destinationViewController as? AddBlogViewController {
+            let nc = segue.destinationViewController as? UINavigationController,
+            let vc = nc.topViewController as? AddViewController {
             
-            vc.tobeAddBlog = sender as? Blog
-        }
-        else if segue.identifier == "showDetail",
+            vc.addViewModel = AddBlogViewModel()
+            
+        } else if segue.identifier == "showDetail",
             let vc = segue.destinationViewController as? WebViewController,
             let blog = sender as? Blog {
             
@@ -181,23 +162,20 @@ class BlogListViewController: UITableViewController, ListSectionObserver {
     // MARK: - Actions
     @IBAction func addButtonTapped(sender: AnyObject) {
         
-        ModelManager.dataStack.beginAsynchronous({ (transaction) in
-            let blogId = NSUUID().UUIDString
-            let tobeAddBlog = transaction.create(Into(Blog))
-            tobeAddBlog.blogId = blogId
-            tobeAddBlog.addDate = NSDate()
-            tobeAddBlog.beginCharacter = "A"
-            transaction.commit({ (result) in
-                switch result {
-                case .Success(let hasChanges):
-                    print("hasChanges \(hasChanges)")
-                    self.performSegueWithIdentifier("showAdd", sender: tobeAddBlog)
-                case .Failure(let error):
-                    print("save failed")
-                    IndicatorAdaptor.showErrorAlert(inViewController: self, message: error.localizedDescription)
-                }
-            })
-        })
+        self.performSegueWithIdentifier(R.segue.blogListViewController.showAdd, sender: nil)
     }
 
+}
+
+class BlogListCell: UITableViewCell {
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    
+    func configureCellWith(title: String?, subtitle: String?, time: String?) {
+        self.titleLabel.text = title
+        self.subtitleLabel.text = subtitle
+        self.timeLabel.text = time
+    }
 }

@@ -14,29 +14,48 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="cOO-OO-c0I" detailTextLabel="NcK-oC-Nxv" style="IBUITableViewCellStyleSubtitle" id="dRY-wf-3k6">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="blogListCell" id="dRY-wf-3k6" customClass="BlogListCell" customModule="BlogFamily" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dRY-wf-3k6" id="cl4-Dm-dLx">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cOO-OO-c0I">
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="viH-vS-WCv">
+                                            <rect key="frame" x="15" y="25" width="31" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7U-HW-hDg">
                                             <rect key="frame" x="15" y="5" width="32" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NcK-oC-Nxv">
-                                            <rect key="frame" x="15" y="25" width="31" height="14"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RgI-5w-fdu" userLabel="Time">
+                                            <rect key="frame" x="554" y="25" width="31" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="viH-vS-WCv" firstAttribute="top" secondItem="n7U-HW-hDg" secondAttribute="bottom" id="ASr-qk-aHx"/>
+                                        <constraint firstItem="RgI-5w-fdu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="viH-vS-WCv" secondAttribute="trailing" constant="8" id="Jvb-sX-nXu"/>
+                                        <constraint firstAttribute="trailing" secondItem="RgI-5w-fdu" secondAttribute="trailing" constant="15" id="Ldc-da-fdw"/>
+                                        <constraint firstItem="n7U-HW-hDg" firstAttribute="leading" secondItem="cl4-Dm-dLx" secondAttribute="leading" constant="15" id="Yma-eS-Wjt"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="n7U-HW-hDg" secondAttribute="trailing" constant="8" id="iiL-be-BTD"/>
+                                        <constraint firstItem="viH-vS-WCv" firstAttribute="leading" secondItem="n7U-HW-hDg" secondAttribute="leading" id="niX-zD-zyc"/>
+                                        <constraint firstItem="RgI-5w-fdu" firstAttribute="centerY" secondItem="viH-vS-WCv" secondAttribute="centerY" id="yS4-RR-1Y1"/>
+                                        <constraint firstItem="n7U-HW-hDg" firstAttribute="top" secondItem="cl4-Dm-dLx" secondAttribute="top" constant="5" id="yvA-eG-Efa"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="subtitleLabel" destination="viH-vS-WCv" id="Vl1-aX-0Yb"/>
+                                    <outlet property="timeLabel" destination="RgI-5w-fdu" id="2v4-3W-VfT"/>
+                                    <outlet property="titleLabel" destination="n7U-HW-hDg" id="OMz-5e-mvz"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -53,62 +72,21 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="WLy-7B-aWy" kind="show" identifier="showAdd" id="doz-CP-4YZ"/>
                         <segue destination="xPg-5Z-ZkY" kind="show" identifier="showDetail" id="kfh-SA-1dT"/>
+                        <segue destination="uqk-Gi-fa6" kind="showDetail" identifier="showAdd" id="KE9-7F-Gnx"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8nD-hC-Lkp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="925" y="1023"/>
         </scene>
-        <!--Title-->
-        <scene sceneID="MFI-rm-uYT">
+        <!--Add-->
+        <scene sceneID="B3F-uF-p9F">
             <objects>
-                <viewController id="WLy-7B-aWy" customClass="AddBlogViewController" customModule="BlogFamily" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="8LW-vA-OcG"/>
-                        <viewControllerLayoutGuide type="bottom" id="eF7-od-Cag"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="eX1-gO-ih0">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入标题" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sGx-3e-qhk">
-                                <rect key="frame" x="8" y="72" width="584" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请输入博客链接" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Kh-iA-Mta">
-                                <rect key="frame" x="8" y="110" width="584" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="1Kh-iA-Mta" firstAttribute="top" secondItem="sGx-3e-qhk" secondAttribute="bottom" constant="8" id="80x-fZ-HKy"/>
-                            <constraint firstItem="sGx-3e-qhk" firstAttribute="top" secondItem="8LW-vA-OcG" secondAttribute="bottom" constant="8" id="Fh9-3B-z6n"/>
-                            <constraint firstItem="1Kh-iA-Mta" firstAttribute="leading" secondItem="sGx-3e-qhk" secondAttribute="leading" id="HbQ-tO-NFk"/>
-                            <constraint firstItem="1Kh-iA-Mta" firstAttribute="trailing" secondItem="sGx-3e-qhk" secondAttribute="trailing" id="J4c-3I-dZF"/>
-                            <constraint firstAttribute="trailing" secondItem="sGx-3e-qhk" secondAttribute="trailing" constant="8" id="XNX-0u-pz3"/>
-                            <constraint firstItem="sGx-3e-qhk" firstAttribute="leading" secondItem="eX1-gO-ih0" secondAttribute="leading" constant="8" id="kjb-S7-MYJ"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Title" id="7Ks-hm-64e">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="Ac4-CF-Egx">
-                            <connections>
-                                <action selector="doneButtonTapped:" destination="WLy-7B-aWy" id="86t-kt-fLA"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="titleTextField" destination="sGx-3e-qhk" id="qCc-ue-yfI"/>
-                        <outlet property="urlTextField" destination="1Kh-iA-Mta" id="MA4-y2-06F"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uOR-Nh-OhO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Add" id="uqk-Gi-fa6" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aRb-M6-BTL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1824" y="629"/>
+            <point key="canvasLocation" x="1480.5" y="833"/>
         </scene>
         <!--Web-->
         <scene sceneID="Vuo-lP-Rhp">
@@ -122,7 +100,7 @@
         <scene sceneID="4Gx-Kq-bW1">
             <objects>
                 <navigationController title="BlogNavigation" id="sxz-ji-wqp" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="博客" id="Myx-4h-l2i"/>
+                    <tabBarItem key="tabBarItem" title="专栏" image="icHome" id="Myx-4h-l2i"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="o2e-KK-ytT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -133,27 +111,27 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AfJ-fo-sFq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="105" y="1023"/>
+            <point key="canvasLocation" x="83" y="1017"/>
         </scene>
         <!--Article-->
         <scene sceneID="w6h-UW-Lyk">
             <objects>
                 <viewControllerPlaceholder storyboardName="Article" id="3u5-8f-82P" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="文章" id="EFE-5m-Axc"/>
+                    <navigationItem key="navigationItem" id="5U4-eX-ePz"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iG6-oP-65q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-153.5" y="1389"/>
+            <point key="canvasLocation" x="680.5" y="1697"/>
         </scene>
         <!--Rss-->
         <scene sceneID="FKr-0o-Ncj">
             <objects>
                 <viewControllerPlaceholder storyboardName="Rss" id="kg4-AJ-wvY" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="订阅" id="g7I-Fg-MOj"/>
+                    <navigationItem key="navigationItem" id="IB6-4u-AAC"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P2H-cf-A7c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-161" y="1499"/>
+            <point key="canvasLocation" x="680" y="2391"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="kVS-Ml-xty">
@@ -166,13 +144,56 @@
                     </tabBar>
                     <connections>
                         <segue destination="sxz-ji-wqp" kind="relationship" relationship="viewControllers" id="zVV-Gs-mfx"/>
-                        <segue destination="3u5-8f-82P" kind="relationship" relationship="viewControllers" id="VPb-I1-N4p"/>
-                        <segue destination="kg4-AJ-wvY" kind="relationship" relationship="viewControllers" id="PTe-qh-uZ5"/>
+                        <segue destination="hwm-Mk-ELI" kind="relationship" relationship="viewControllers" id="Sj7-e1-3SI"/>
+                        <segue destination="b1s-X4-opX" kind="relationship" relationship="viewControllers" id="OTS-da-eOA"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CvV-Ie-Ubp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-973" y="1233"/>
         </scene>
+        <!--文章-->
+        <scene sceneID="Ale-8F-CTb">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hwm-Mk-ELI" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="文章" image="icBook" id="EFE-5m-Axc"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="g2g-bw-32c">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="3u5-8f-82P" kind="relationship" relationship="rootViewController" id="dhP-fO-xKj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ajr-yG-bnN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="94" y="1711"/>
+        </scene>
+        <!--订阅-->
+        <scene sceneID="nte-gK-263">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="b1s-X4-opX" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="订阅" image="icFeedTab" id="g7I-Fg-MOj"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Uvt-mP-o03">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="kg4-AJ-wvY" kind="relationship" relationship="rootViewController" id="6mw-h4-Q6W"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IyT-eO-JLT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="94" y="2391"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="icBook" width="20" height="21"/>
+        <image name="icFeedTab" width="20" height="21"/>
+        <image name="icHome" width="20" height="21"/>
+    </resources>
 </document>

@@ -32,16 +32,15 @@ class AddBlogViewController: UIViewController, UINavigationControllerDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "suggestion", let vc = segue.destinationViewController as? SuggestTableViewController {
+            vc.titleTextField = self.titleTextField
+            vc.urlTextField = self.urlTextField
+        }
     }
-    */
     
     // MARK: - Actions
     @IBAction func doneButtonTapped(sender: AnyObject) {
@@ -64,7 +63,9 @@ class AddBlogViewController: UIViewController, UINavigationControllerDelegate {
                     transaction.commit({ (result) in
                         if result {
                             strongSelf.cancelled = false
-                            strongSelf.navigationController?.popViewControllerAnimated(true)
+                            dispatch_async_safely_to_main_queue({
+                                strongSelf.dismissSelf()
+                            })
                         }
                     })
                 }
@@ -72,8 +73,16 @@ class AddBlogViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
 
+    @IBAction func cancelTapped(sender: UIBarButtonItem) {
+        self.dismissSelf()
+    }
+    
     // MARK: - Private
     private var cancelled = true
+    
+    private func dismissSelf() {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
     private func cleanDBTrashIfNeeded() {
         

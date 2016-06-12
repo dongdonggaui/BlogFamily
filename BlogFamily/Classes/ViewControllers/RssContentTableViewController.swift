@@ -42,7 +42,7 @@ class RssContentTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.rssContentCell(), forIndexPath: indexPath)
 
         let article = self.articles[indexPath.row]
         (cell.contentView.viewWithTag(2) as! UILabel).text = article.title
@@ -64,7 +64,7 @@ class RssContentTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showContent", let vc = segue.destinationViewController as? WebViewController {
             let article = sender as! Article
-            vc.url = NSURL(fileURLWithPath: FileManagerAdaptor.webarchivePath(withName: article.archivePath!)!)
+            vc.url = NSURL(fileURLWithPath: FileManagerAdaptor.webarchivePath(withName: article.archivePath ?? article.url!)!)
         }
     }
 }

@@ -13,7 +13,7 @@ extension String {
         var s = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) as NSString
         do {
             let regex = try NSRegularExpression(pattern: "<[^>]+>", options: .CaseInsensitive)
-            s = regex.stringByReplacingMatchesInString(s as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, s.length), withTemplate: "")
+            s = regex.stringByReplacingMatchesInString(s as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, s.length), withTemplate: "").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         } catch {
             print("clear html error")
         }

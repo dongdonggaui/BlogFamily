@@ -24,8 +24,16 @@ class UtlsTest: XCTestCase {
     func testClearHTMLElements() {
         let rawString = "This is a test!"
         let s = "\n\n <h1 class=\"动动拐\">\(rawString)</p>\n "
-        let result = s.lkq_stringByClearHTMLElements()
-        print("result : \(result)")
-        XCTAssert(result == rawString, "html elements should be cleared")
+        let result1 = s.lkq_stringByClearHTMLElements()
+        print("result1 : \(result1)")
+        XCTAssert(result1 == rawString, "html elements should be cleared")
+        
+        let result2 = rawString.lkq_stringByClearHTMLElements()
+        XCTAssert(result2 == rawString, "normal string should not be changed")
+        
+        let s3 = "<p>\n \n \(rawString)"
+        let result3 = s3.lkq_stringByClearHTMLElements()
+        print("result3 : \(result3)")
+        XCTAssert(result3 == rawString, "white space & new line should be trimmed after clear html elements")
     }
 }

@@ -33,7 +33,7 @@ class RssTableViewController: UITableViewController, ListSectionObserver {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.rssCell(), forIndexPath: indexPath)
 
         let feed = ModelManager.feeds[indexPath]
         cell.textLabel?.text = feed.title
