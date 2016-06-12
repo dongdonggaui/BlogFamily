@@ -14,6 +14,7 @@ target 'BlogFamily' do
   pod 'ChameleonFramework/Swift'
   pod 'SwiftFilePath'
   pod 'JLToast', '~> 1.4'
+  pod 'NJKWebViewProgress'
 
   target 'BlogFamilyTests' do
     inherit! :search_paths

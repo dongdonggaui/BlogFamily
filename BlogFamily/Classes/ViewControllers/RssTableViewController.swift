@@ -19,6 +19,7 @@ class RssTableViewController: UITableViewController, ListSectionObserver {
         super.viewDidLoad()
     
         ModelManager.feeds.addObserver(self)
+        self.tableView.rowHeight = 50
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,7 +34,7 @@ class RssTableViewController: UITableViewController, ListSectionObserver {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.rssCell(), forIndexPath: indexPath)
 
         let feed = ModelManager.feeds[indexPath]
         cell.textLabel?.text = feed.title
@@ -45,6 +46,28 @@ class RssTableViewController: UITableViewController, ListSectionObserver {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let Feed = ModelManager.feeds[indexPath]
         self.performSegueWithIdentifier("showFeed", sender: Feed)
+    }
+    
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        switch editingStyle {
+        case .Delete:
+            let alert = UIAlertController(title: "确定删除", message: "删除后不可撤销", preferredStyle: .ActionSheet)
+            alert.addAction(UIAlertAction(title: "删除", style: .Destructive, handler: { action in
+                ModelManager.dataStack.beginAsynchronous({ (transaction) in
+                    let feed = ModelManager.feeds[indexPath]
+                    transaction.delete(feed)
+                    transaction.commit()
+                })
+            }))
+            alert.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        default:
+            print("unsupported editing style : \(editingStyle)")
+        }
     }
     
     // MARK: - Navigation

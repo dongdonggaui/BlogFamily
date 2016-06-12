@@ -13,6 +13,7 @@ class ArticleListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.title = "文章"
     }
 
     override func didReceiveMemoryWarning() {

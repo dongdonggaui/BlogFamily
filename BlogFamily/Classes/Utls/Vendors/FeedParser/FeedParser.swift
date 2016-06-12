@@ -70,6 +70,8 @@ class FeedParser: NSObject, NSXMLParserDelegate {
     var currentElementContent: String!
     var currentFeedChannel: FeedChannel!
     var currentFeedItem: FeedItem!
+    var currentAuthor: String?
+    
     
     init(feedURL: String) {
         self.feedURL = feedURL
@@ -115,7 +117,18 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         if (feedRawContents != nil) { // already downloaded content?
             feedParser = NSXMLParser(data: feedRawContents!)
         } else { // retrieve content and start parsing.
-            feedParser = NSXMLParser(contentsOfURL: NSURL(string: feedURL)!)
+            let semaphore = dispatch_semaphore_create(0)
+            NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: feedURL)!, completionHandler: { [weak self] (data, response, error) in
+                if let data = data {
+                    self!.feedParser = NSXMLParser(data: data)
+                } else {
+                    self!.feedParser = nil
+                    print("fetch xml failed : \(error)")
+                }
+                dispatch_semaphore_signal(semaphore)
+            }).resume()
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+//            feedParser = NSXMLParser(contentsOfURL: NSURL(string: feedURL)!)
         }
         if (feedParser != nil) { // content successfully retrieved
             self.parsingStatus = .Parsing
@@ -140,6 +153,10 @@ class FeedParser: NSObject, NSXMLParserDelegate {
     
     // MARK: - NSXMLParser methods
     
+    func parserDidStartDocument(parser: NSXMLParser) {
+        print("parser did start : \(feedURL)")
+    }
+    
     // MARK: -- Element start
     
     /** Did start element. */
@@ -151,7 +168,7 @@ class FeedParser: NSObject, NSXMLParserDelegate {
             self.currentElementContent = ""
             
             // Determine the type of feed.
-            if elementName == FeedType.Atom.rawValue { self.feedType = .Atom; return }
+            if elementName == FeedType.Atom.rawValue { self.feedType = .Atom;}
             if elementName == FeedType.RSS1.rawValue || elementName == FeedType.RSS1Alt.rawValue { self.feedType = .RSS1; return }
             if elementName == FeedType.RSS2.rawValue { self.feedType = .RSS2; return }
             
@@ -259,9 +276,9 @@ class FeedParser: NSObject, NSXMLParserDelegate {
             
             // check for max items
             self.feedItemsParsed += 1
-            if (self.feedItemsParsed >= self.maxFeedsToParse) { // parse up to maxFeedsToParse
-                self.successfullyCloseParsingAfterMaxItemsFound()
-            }
+//            if (self.feedItemsParsed >= self.maxFeedsToParse) { // parse up to maxFeedsToParse
+//                self.successfullyCloseParsingAfterMaxItemsFound()
+//            }
         }
             
         // title
@@ -292,14 +309,24 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         }
         else if self.currentPath == "/feed/entry/content" {
             self.currentFeedItem?.feedContent = self.currentElementContent
+            // fill in cached author if have not set
+            self.currentFeedItem?.feedAuthor = self.currentFeedItem?.feedAuthor ?? self.currentAuthor
+        }
+            
+        // summary
+        else if self.currentPath == "/feed/entry/summary" || self.currentPath == "/feed/entry/description" {
+            self.currentFeedItem?.feedContent = self.currentElementContent
         }
             
         // pub date
         else if self.currentPath == "/feed/updated" {
             self.currentFeedChannel?.channelDateOfLastChange = self.retrieveDateFromDateString(self.currentElementContent, feedType: self.feedType)
         }
-        else if self.currentPath == "/feed/entry/updated" {
+        else if self.currentPath == "/feed/entry/published" {
             self.currentFeedItem?.feedPubDate = self.retrieveDateFromDateString(self.currentElementContent, feedType: self.feedType)
+        }
+        else if self.currentPath == "/feed/entry/updated" {
+            self.currentFeedItem?.feedUpdateDate = self.retrieveDateFromDateString(self.currentElementContent, feedType: self.feedType)
         }
             
         // category
@@ -310,6 +337,11 @@ class FeedParser: NSObject, NSXMLParserDelegate {
             if let category = self.currentElementAttributes?["term"] as? String {
                 self.currentFeedItem?.feedCategories.append(category)
             }
+        }
+            
+        // author (if not appear in entry)
+        else if self.currentPath == "/feed/author/name" {
+            self.currentAuthor = self.currentElementContent
         }
             
         // author (feed items only)
@@ -538,6 +570,7 @@ class FeedParser: NSObject, NSXMLParserDelegate {
     }
 
     func parserDidEndDocument(parser: NSXMLParser) {
+        print("xml parser did end document : \(feedURL)")
         self.delegate?.feedParser?(self, successfullyParsedURL: feedURL)
     }
     
@@ -610,6 +643,17 @@ class FeedParser: NSObject, NSXMLParserDelegate {
         let cfEncoding: CFStringEncoding = CFStringConvertIANACharSetNameToEncoding(textEncodingName! as NSString as CFStringRef)
         if cfEncoding != kCFStringEncodingInvalidId { return CFStringConvertEncodingToNSStringEncoding(cfEncoding); }
         else { return nil; }
+    }
+    
+    // MARK: - add
+    func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
+        print("xml parse error : \(parseError)")
+        abortParsingAndReportFailure(parseError.localizedDescription)
+    }
+    
+    func parser(parser: NSXMLParser, validationErrorOccurred validationError: NSError) {
+        print("xml parse validation error : \(validationError)")
+        abortParsingAndReportFailure(validationError.localizedDescription)
     }
     
 }

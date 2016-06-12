@@ -27,8 +27,16 @@ extension FileManagerAdaptor {
         return relativeDirectoryToDocuments(withName: "webarchives")
     }
     
+    static func generateWebarchiveId() -> String {
+        return NSUUID().UUIDString
+    }
+    
     static func generateWebarchiveName() -> String {
         return "\(NSUUID().UUIDString).webarchive"
+    }
+    
+    static func fileName(withWebarhiveId arhiveId: String) -> String {
+        return "\(arhiveId).webarchive"
     }
     
     static func webarchiveId(withFileName fileName: String) -> String? {

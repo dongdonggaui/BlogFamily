@@ -15,6 +15,8 @@ class RssContentTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tableView.rowHeight = 70
 
         if let articles = feed?.articles {
             var tmpArr = [Article]()
@@ -22,6 +24,9 @@ class RssContentTableViewController: UITableViewController {
                 let article = article as! Article
                 tmpArr += [article]
             })
+            tmpArr = (tmpArr as NSArray).sortedArrayUsingComparator({ (obj1, obj2) -> NSComparisonResult in
+                return ((obj2 as! Article).publicDate!.compare((obj1 as! Article).publicDate!))
+            }) as! [Article]
             self.articles += tmpArr
         }
     }
@@ -37,12 +42,13 @@ class RssContentTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.rssContentCell(), forIndexPath: indexPath)
 
         let article = self.articles[indexPath.row]
-        cell.textLabel?.text = article.title
-        cell.detailTextLabel?.text = article.summary
-        cell.imageView?.image = Resourse.icFeedImage()
+        (cell.contentView.viewWithTag(2) as! UILabel).text = article.title
+        (cell.contentView.viewWithTag(3) as! UILabel).text = article.publicDate?.lkq_standardDisplayDate()
+        (cell.contentView.viewWithTag(4) as! UILabel).text = article.summary?.lkq_stringByClearHTMLElements()
+        (cell.contentView.viewWithTag(1) as! UIImageView).image = Resourse.icFeedImage()
 
         return cell
     }
@@ -58,7 +64,7 @@ class RssContentTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showContent", let vc = segue.destinationViewController as? WebViewController {
             let article = sender as! Article
-            vc.url = NSURL(fileURLWithPath: FileManagerAdaptor.webarchivePath(withName: article.archivePath!)!)
+            vc.url = NSURL(fileURLWithPath: FileManagerAdaptor.webarchivePath(withName: article.archivePath ?? article.url!)!)
         }
     }
 }

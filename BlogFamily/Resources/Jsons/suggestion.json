@@ -1,0 +1,44 @@
+[
+  {
+    "title": "OneV's Den",
+    "desc": "嗨，我是王巍 (@onevcat)，一名来自中国的 iOS / Unity 开发者。现居日本，就职于 LINE。正在修行，探求创意之源。",
+    "url": "https://onevcat.com/",
+    "feed": "https://onevcat.com/feed.xml"
+  },
+  {
+    "title": "sunnyxx",
+    "desc": "“招聘一个靠谱的iOS”作者孙源。",
+    "url": "http://blog.sunnyxx.com/",
+    "feed": "http://blog.sunnyxx.com/atom.xml"
+  },
+  {
+    "title": "Limboy",
+    "desc": "蘑菇街李忠",
+    "url": "http://limboy.me",
+    "feed": "暂无订阅"
+  },
+  {
+    "title": "Garan no dou",
+    "desc": "“YYKit”作者郭耀源。",
+    "url": "http://blog.ibireme.com/",
+    "feed": "http://blog.ibireme.com/feed/"
+  },
+  {
+    "title": "NSHipster 中文版",
+    "desc": "NSHipster 关注被忽略的 Objective-C、Swift 和 Cocoa 特性。每周更新。",
+    "url": "http://nshipster.cn/",
+    "feed": "http://nshipster.cn/feed.xml"
+  },
+  {
+    "title": "objc 中国",
+    "desc": "为中国 Objective-C 社区带来最佳实践和先进技术",
+    "url": "http://objccn.io/",
+    "feed": "暂无订阅"
+  },
+  {
+    "title": "Ole Begemann",
+    "desc": "Hi, I’m Ole, and I live in Berlin. Thanks for visiting my site.",
+    "url": "http://oleb.net/blog/",
+    "feed": "http://oleb.net/blog/atom.xml"
+  }
+]

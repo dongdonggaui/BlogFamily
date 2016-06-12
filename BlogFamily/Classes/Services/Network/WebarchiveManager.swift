@@ -12,6 +12,8 @@ import CoreStore
 
 private typealias WebarchiveCompletionHandler = (archivedPath: String?, title: String?, error: NSError?) -> ()
 typealias WebarchiveFinished = (success: Bool, errorReason: String?) -> ()
+typealias ArticleDownloadProgress = (completedTaskCount: Int, totalTaskCount: Int) -> ()
+typealias ArticleDwonloadCompletionHandler = () -> ()
 
 let WebarchiveManagerError = "WebarchiveManagerError"
 
@@ -89,61 +91,61 @@ extension WebarchiveManager {
 }
 
 extension WebarchiveManager {
-    private func addArchiveTask(withUrl url: NSURL, completionHandler: WebarchiveCompletionHandler) {
-        dispatch_async(downloadQueue) {
-
-            self.totalTaskCountIncrement()
+    private func addArchiveTask(withUrl url: NSURL, fileName: String? = nil, completionHandler: WebarchiveCompletionHandler) {
+        
+        print("begin download task : \(url.absoluteString)")
+        
+        self.totalTaskCountIncrement()
+        
+        let semaphore = dispatch_semaphore_create(0)
+        Archiver.logEnabled = true
+        Archiver.archiveWebpageFormUrl(url) { (webarchiveData, metaData, error) in
+            print("end download task : \(url.absoluteString), with error : \(error)")
             
-            IndicatorAdaptor.whistleLoading(withMessage: "下载中...\(self.completedTaskCount)/\(self.totalTaskCount)")
+            let fileName = fileName ?? FileManagerAdaptor.generateWebarchiveName()
             
-            let semaphore = dispatch_semaphore_create(0)
-            
-            Archiver.archiveWebpageFormUrl(url) { (webarchiveData, metaData, error) in
+            let completed: (success: Bool, error: NSError?) -> () = { success, error in
                 
-                let fileName = FileManagerAdaptor.generateWebarchiveName()
+                self.completedTaskCountIncrement()
+                if self.completedTaskCount == self.totalTaskCount {
+                    self.clearTotalTaskCount()
+                    self.clearCompletedTaskCount()
+                }
                 
-                let completed: (success: Bool, error: NSError?) -> () = { success, error in
-                    
-                    self.completedTaskCountIncrement()
-                    if self.completedTaskCount == self.totalTaskCount {
-                        self.clearTotalTaskCount()
-                        self.clearCompletedTaskCount()
+                if success {
+                    var htmlTitle: String?
+                    if let title = metaData?[ArchivedWebpageMetaKeyTitle] {
+                        htmlTitle = title
                     }
-                    
-                    if success {
-                        var htmlTitle: String?
-                        if let title = metaData?[ArchivedWebpageMetaKeyTitle] {
-                            htmlTitle = title
-                        }
-                        completionHandler(archivedPath: fileName, title: htmlTitle, error: nil)
-                    } else {
-                        completionHandler(archivedPath: nil, title: nil, error: error)
-                    }
-                    
-                    dispatch_semaphore_signal(semaphore)
-                }
-                
-                guard let data = webarchiveData else {
-                    completed(success: false, error: NSError(domain: WebarchiveManagerError, code: WebarchiveManagerErrorCode.NoData.rawValue, userInfo: nil))
-                    return
-                }
-                
-                guard let filePath = FileManagerAdaptor.webarchivePath(withName: fileName) else {
-                    completed(success: false, error: NSError(domain: WebarchiveManagerError, code: WebarchiveManagerErrorCode.CreateArchiveDirFailed.rawValue, userInfo: nil))
-                    return
-                }
-                
-                if (data.writeToFile(filePath, atomically: true)) {
-                    completed(success: true, error: nil)
+                    completionHandler(archivedPath: fileName, title: htmlTitle, error: nil)
                 } else {
-                    completed(success: false, error: NSError(domain: WebarchiveManagerError, code: WebarchiveManagerErrorCode.WriteToDiskError.rawValue, userInfo: nil))
+                    completionHandler(archivedPath: nil, title: nil, error: error)
                 }
+                
+                dispatch_semaphore_signal(semaphore)
             }
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+            
+            guard let data = webarchiveData else {
+                completed(success: false, error: NSError(domain: WebarchiveManagerError, code: WebarchiveManagerErrorCode.NoData.rawValue, userInfo: nil))
+                return
+            }
+            
+            guard let filePath = FileManagerAdaptor.webarchivePath(withName: fileName) else {
+                completed(success: false, error: NSError(domain: WebarchiveManagerError, code: WebarchiveManagerErrorCode.CreateArchiveDirFailed.rawValue, userInfo: nil))
+                return
+            }
+            
+            if (data.writeToFile(filePath, atomically: true)) {
+                completed(success: true, error: nil)
+            } else {
+                completed(success: false, error: NSError(domain: WebarchiveManagerError, code: WebarchiveManagerErrorCode.WriteToDiskError.rawValue, userInfo: nil))
+            }
         }
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
     }
 }
 
+// MARK: - Extension for indicators
 extension WebarchiveManager {
     
     func archive(url url: NSURL) {
@@ -156,7 +158,7 @@ extension WebarchiveManager {
         }
     }
     
-    func archive(url url: NSURL, feed: Feed? = nil, finished: WebarchiveFinished) {
+    func archive(url url: NSURL, fileName: String? = nil, finished: WebarchiveFinished) {
         
         if url.absoluteString.hasPrefix("file://") {
             IndicatorAdaptor.toast(message: "已经下载过啦")
@@ -167,45 +169,104 @@ extension WebarchiveManager {
             finished(success: false, errorReason: "该任务正在下载中，请勿重复添加")
             return
         }
+        
+        // check if needed to download webpage
         var exist = false
+        var article: Article? = nil
         ModelManager.dataStack.beginSynchronous { (transaction) in
-            let article = transaction.fetchOne(From(Article), Where("url", isEqualTo: url.absoluteString))
-            exist = article != nil
+            article = transaction.fetchOne(From(Article), Where("url", isEqualTo: url.absoluteString))
+            exist = article?.archivePath != nil
         }
+        
+        // stop if the webpage already downloaded
         if exist {
             finished(success: false, errorReason: "已经下载过啦")
             return
         }
+        
+        // launch webpage download task
         self.taskEnqueue(withUrl: url)
-        dispatch_group_enter(archiveGroup)
-        self.addArchiveTask(withUrl: url) { [weak self] (archivedPath, title, error) in
+        self.addArchiveTask(withUrl: url, fileName: fileName) { [weak self] (archivedPath, title, error) in
             guard let safeSelf = self else {
                 return
             }
             guard let fileName = archivedPath else {
                 safeSelf.taskDequeue(withUrl: url)
-                dispatch_group_leave(safeSelf.archiveGroup)
                 return
             }
             
-            ModelManager.dataStack.beginAsynchronous({ (transaction) in
-                let article = transaction.create(Into(Article))
-                article.artileId = FileManagerAdaptor.webarchiveId(withFileName: fileName)
-                article.archivePath = fileName
-                article.url = url.absoluteString
-                article.title = title
-                if feed != nil {
-                    let feed = transaction.edit(feed)
-                    article.feed = feed
+            // download success then save it to db
+            ModelManager.dataStack.beginSynchronous({ (transaction) in
+                if let article = transaction.edit(article) {
+                    // feed article task
+                    print("download feed article : \(article.title)")
+                    article.archivePath = fileName
+                } else {
+                    // web article task
+                    print("download web article : \(title)")
+                    let article = transaction.create(Into(Article))
+                    article.artileId = FileManagerAdaptor.webarchiveId(withFileName: fileName)
+                    article.archivePath = fileName
+                    article.url = url.absoluteString
+                    article.title = title
+                    article.addDate = NSDate()
+                    article.domain = url.host
                 }
-                transaction.commit()
+                
+                let result = transaction.commitAndWait()
+                switch result {
+                case .Success(let hasChanges):
+                    print("commit success with changes : \(hasChanges))")
+                case .Failure(let error):
+                    print("commit failed : \(error)")
+                }
             })
             
             safeSelf.taskDequeue(withUrl: url)
-            dispatch_group_leave(safeSelf.archiveGroup)
-        }
-        dispatch_group_notify(self.archiveGroup, dispatch_get_main_queue()) {
             finished(success: true, errorReason: nil)
         }
+    }
+}
+
+// MARK: - Extension for multi taskes
+extension WebarchiveManager {
+    
+    func downloadArticles(articles: [Article], progress: ArticleDownloadProgress, completion: ArticleDwonloadCompletionHandler) {
+        
+        var completedCount = 0
+        let totalCount = articles.count
+        let updateProgress = {
+            completedCount += 1
+            progress(completedTaskCount: completedCount, totalTaskCount: totalCount)
+        }
+        
+//        let articleGroup = dispatch_group_create()
+        let articleQueue = dispatch_queue_create("com.bf.articleQueue", DISPATCH_QUEUE_SERIAL)
+        
+        dispatch_apply(articles.count, articleQueue) { (index) in
+            let semaphore = dispatch_semaphore_create(0)
+            let article = articles[index]
+            self.archive(url: NSURL(string: article.url!)!, fileName: FileManagerAdaptor.fileName(withWebarhiveId: article.artileId!), finished: { (success, errorReason) in
+                updateProgress()
+                dispatch_semaphore_signal(semaphore)
+            })
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        }
+        
+        completion()
+        
+//        for article in articles {
+//            dispatch_group_async(articleGroup, articleQueue, {
+//                let semaphore = dispatch_semaphore_create(0)
+//                self.archive(url: NSURL(string: article.url!)!, fileName: FileManagerAdaptor.fileName(withWebarhiveId: article.artileId!), finished: { (success, errorReason) in
+//                    updateProgress()
+//                    dispatch_semaphore_signal(semaphore)
+//                })
+//                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+//            })
+//        }
+//        dispatch_group_notify(articleGroup, articleQueue) { 
+//            completion()
+//        }
     }
 }

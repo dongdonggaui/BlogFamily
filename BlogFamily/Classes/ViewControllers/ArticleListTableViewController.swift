@@ -19,6 +19,7 @@ class ArticleListTableViewController: UITableViewController, ListSectionObserver
         super.viewDidLoad()
     
         ModelManager.articles.addObserver(self)
+        self.tableView.rowHeight = 50
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,11 +34,10 @@ class ArticleListTableViewController: UITableViewController, ListSectionObserver
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.articleListCell(), forIndexPath: indexPath) as! ArticleListCell
 
         let article = ModelManager.articles[indexPath]
-        cell.textLabel?.text = article.title
-        cell.detailTextLabel?.text = article.url
+        cell.configureWith(article.title, subtitle: article.summary?.lkq_stringByClearHTMLElements(), downloaded: article.archivePath != nil)
 
         return cell
     }
@@ -53,7 +53,7 @@ class ArticleListTableViewController: UITableViewController, ListSectionObserver
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showArticle", let vc = segue.destinationViewController as? WebViewController {
             let article = sender as! Article
-            vc.url = NSURL(fileURLWithPath: FileManagerAdaptor.webarchivePath(withName: article.archivePath!)!)
+            vc.url = NSURL(fileURLWithPath: FileManagerAdaptor.webarchivePath(withName: article.archivePath ?? article.url!)!)
         }
     }
     
@@ -96,5 +96,20 @@ class ArticleListTableViewController: UITableViewController, ListSectionObserver
     func listMonitor(monitor: ListMonitor<Article>, didUpdateObject object: Article, atIndexPath indexPath: NSIndexPath) {
         
         self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    }
+}
+
+class ArticleListCell: UITableViewCell {
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subTitleLabel: UILabel!
+    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var titleTrailingConstraint: NSLayoutConstraint!
+    
+    func configureWith(title: String?, subtitle: String?, downloaded: Bool) {
+        self.titleLabel.text = title
+        self.subTitleLabel.text = subtitle
+        self.iconImageView.hidden = !downloaded
+        self.titleTrailingConstraint.constant = downloaded ? 8 : 0
     }
 }

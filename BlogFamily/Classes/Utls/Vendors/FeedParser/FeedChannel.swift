@@ -35,7 +35,8 @@ class FeedChannel: NSObject {
 
     // MARK: - utility methods
     var isValid: Bool {
-        if (channelTitle != nil && channelURL != nil && channelLink != nil) { return true }
+//        if (channelTitle != nil && channelURL != nil && channelLink != nil) { return true }
+        if (channelTitle != nil && channelLink != nil) { return true }
         else { return false }
     }
     

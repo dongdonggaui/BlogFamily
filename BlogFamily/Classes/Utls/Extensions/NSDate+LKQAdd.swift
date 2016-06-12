@@ -27,6 +27,23 @@ public extension NSDate {
         }
     }
     
+    private var sharedISO8601GMTFormatter: NSDateFormatter {
+        get {
+            struct Static {
+                static var onceToken : dispatch_once_t = 0
+                static var standardDisplayFormatter : NSDateFormatter? = nil
+            }
+            
+            dispatch_once(&Static.onceToken) {
+                let formatter = NSDateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
+                Static.standardDisplayFormatter = formatter
+            }
+            
+            return Static.standardDisplayFormatter!
+        }
+    }
+    
     public func lkq_standardDisplayDate() -> String! {
         
         return self.sharedStandardDisplayFormatter.stringFromDate(self)
