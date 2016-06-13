@@ -19,6 +19,8 @@ class AddViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.titleTextField.placeholder = self.addViewModel?.titlePlaceholder
+        self.feedTextField.placeholder = self.addViewModel?.subtitlePlaceholder
     }
 
     override func didReceiveMemoryWarning() {
