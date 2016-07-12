@@ -37,7 +37,7 @@ class ArticleListTableViewController: UITableViewController, ListSectionObserver
         let cell = tableView.dequeueReusableCellWithIdentifier(Resourse.articleListCell(), forIndexPath: indexPath) as! ArticleListCell
 
         let article = ModelManager.articles[indexPath]
-        cell.configureWith(article.title, subtitle: article.summary?.lkq_stringByClearHTMLElements(), downloaded: article.archivePath != nil)
+        cell.configureWith(article.title, subtitle: article.url, downloaded: article.archivePath != nil)
 
         return cell
     }

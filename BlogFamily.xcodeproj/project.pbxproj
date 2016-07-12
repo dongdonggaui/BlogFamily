@@ -48,6 +48,7 @@
 		0965551B1CF6F74F00D0A120 /* ThreadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0965551A1CF6F74F00D0A120 /* ThreadHelper.swift */; };
 		0992493E1D06665200A795C2 /* AddViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0992493D1D06665200A795C2 /* AddViewModel.swift */; };
 		0995152E1CED55B3003EE2E3 /* self-manager.webarchive in Resources */ = {isa = PBXBuildFile; fileRef = 0995152D1CED55B3003EE2E3 /* self-manager.webarchive */; };
+		09DB0D571D348267002F1736 /* LogAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DB0D561D348267002F1736 /* LogAdaptor.swift */; };
 		09E97CBE1CFFF8CF006DD858 /* Feed+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E97CBA1CFFF8CF006DD858 /* Feed+CoreDataProperties.swift */; };
 		09E97CBF1CFFF8CF006DD858 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E97CBB1CFFF8CF006DD858 /* Feed.swift */; };
 		09E97CC01CFFF8CF006DD858 /* Article+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E97CBC1CFFF8CF006DD858 /* Article+CoreDataProperties.swift */; };
@@ -135,6 +136,7 @@
 		0965551A1CF6F74F00D0A120 /* ThreadHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadHelper.swift; sourceTree = "<group>"; };
 		0992493D1D06665200A795C2 /* AddViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddViewModel.swift; sourceTree = "<group>"; };
 		0995152D1CED55B3003EE2E3 /* self-manager.webarchive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "self-manager.webarchive"; sourceTree = "<group>"; };
+		09DB0D561D348267002F1736 /* LogAdaptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogAdaptor.swift; sourceTree = "<group>"; };
 		09E97CBA1CFFF8CF006DD858 /* Feed+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Feed+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		09E97CBB1CFFF8CF006DD858 /* Feed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		09E97CBC1CFFF8CF006DD858 /* Article+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Article+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 				090B12A71CF5BEF8003AFAA0 /* FileManagerAdaptor.swift */,
 				09EE527E1CF7EE6C005139ED /* FeedParserAdaptor.swift */,
 				094700791D0030E100A8D143 /* ErrorAdaptor.swift */,
+				09DB0D561D348267002F1736 /* LogAdaptor.swift */,
 			);
 			path = Adaptors;
 			sourceTree = "<group>";
@@ -762,6 +765,7 @@
 				09626D641CEAE64B00793398 /* Model.xcdatamodeld in Sources */,
 				095004A01CF580B8005B1A58 /* ArticleListViewController.swift in Sources */,
 				09626D6A1CEAE78300793398 /* BlogListViewController.swift in Sources */,
+				09DB0D571D348267002F1736 /* LogAdaptor.swift in Sources */,
 				09626D671CEAE70E00793398 /* Blog+CoreDataProperties.swift in Sources */,
 				093A62531CEC5DBE00AA747C /* ResourceAdaptor.swift in Sources */,
 				09EE52831CF7F19E005139ED /* RssContentTableViewController.swift in Sources */,

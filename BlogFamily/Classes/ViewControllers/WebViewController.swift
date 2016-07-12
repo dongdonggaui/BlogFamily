@@ -12,13 +12,14 @@ import NJKWebViewProgress
 
 class WebViewController: UIViewController, UIScrollViewDelegate, UIWebViewDelegate, NJKWebViewProgressDelegate {
     
-    var url: NSURL? = nil
+    var url: NSURL?
+    var currentUrl: NSURL?
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var toolView: UIView!
     
     lazy var progressView: NJKWebViewProgressView = {
-        let view = NJKWebViewProgressView(frame: CGRect(x: 0, y: 20, width: CGRectGetWidth(self.view.frame), height: 4))
+        let view = NJKWebViewProgressView(frame: CGRect(x: 0, y: 20, width: CGRectGetWidth(self.view.frame), height: 2))
         return view
     }()
     
@@ -59,6 +60,12 @@ class WebViewController: UIViewController, UIScrollViewDelegate, UIWebViewDelega
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: - UIWebViewDelegate
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        self.currentUrl = request.URL
+        return true
     }
     
     // MARK: - UIScrollViewDelegate
@@ -105,8 +112,11 @@ class WebViewController: UIViewController, UIScrollViewDelegate, UIWebViewDelega
     }
     
     @IBAction func downloadButtonTapped(sender: UIButton) {
-        if let url = self.webView.request?.URL {
+        if let url = currentUrl {
+            LogAdaptor.printLog("current url : \(url)")
             WebarchiveManager.sharedInstance.archive(url: url)
+        } else {
+            IndicatorAdaptor.toast(message: "链接为空")
         }
     }
     

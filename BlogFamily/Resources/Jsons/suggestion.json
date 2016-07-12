@@ -40,5 +40,11 @@
     "desc": "Hi, I’m Ole, and I live in Berlin. Thanks for visiting my site.",
     "url": "http://oleb.net/blog/",
     "feed": "http://oleb.net/blog/atom.xml"
+  },
+  {
+    "title": "极限前端",
+    "desc": "极限前端, 极限前端社区, ouvenzhang的博客, github地址, 前端技术, 讲述前端高效技术与前沿。",
+    "url": "http://jixianqianduan.com/",
+    "feed": "http://jixianqianduan.com/feed.xml"
   }
 ]

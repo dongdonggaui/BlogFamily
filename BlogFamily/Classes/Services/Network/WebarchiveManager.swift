@@ -188,15 +188,17 @@ extension WebarchiveManager {
         self.taskEnqueue(withUrl: url)
         self.addArchiveTask(withUrl: url, fileName: fileName) { [weak self] (archivedPath, title, error) in
             guard let safeSelf = self else {
+                finished(success: false, errorReason: "提前释放了")
                 return
             }
             guard let fileName = archivedPath else {
                 safeSelf.taskDequeue(withUrl: url)
+                finished(success: false, errorReason: "下载失败")
                 return
             }
             
             // download success then save it to db
-            ModelManager.dataStack.beginSynchronous({ (transaction) in
+            ModelManager.dataStack.beginAsynchronous({ (transaction) in
                 if let article = transaction.edit(article) {
                     // feed article task
                     print("download feed article : \(article.title)")
@@ -213,17 +215,19 @@ extension WebarchiveManager {
                     article.domain = url.host
                 }
                 
-                let result = transaction.commitAndWait()
-                switch result {
-                case .Success(let hasChanges):
-                    print("commit success with changes : \(hasChanges))")
-                case .Failure(let error):
-                    print("commit failed : \(error)")
-                }
-            })
+                transaction.commit({ (result) in
+                    safeSelf.taskDequeue(withUrl: url)
+                    switch result {
+                    case .Success(let hasChanges):
+                        print("commit success with changes : \(hasChanges))")
+                        finished(success: true, errorReason: nil)
+                    case .Failure(let error):
+                        print("commit failed : \(error)")
+                        finished(success: false, errorReason: error.localizedDescription)
+                    }
             
-            safeSelf.taskDequeue(withUrl: url)
-            finished(success: true, errorReason: nil)
+                })
+            })
         }
     }
 }
