@@ -938,7 +938,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hly.BlogFamily;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bd45ba5b-4132-43c2-b72c-f2a8c34cf8a2";
+				PROVISIONING_PROFILE = "d82275a8-3501-4268-b8e8-8bfb5dafaadc";
 			};
 			name = Debug;
 		};
@@ -952,7 +952,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hly.BlogFamily;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bd45ba5b-4132-43c2-b72c-f2a8c34cf8a2";
+				PROVISIONING_PROFILE = "d82275a8-3501-4268-b8e8-8bfb5dafaadc";
 			};
 			name = Release;
 		};
